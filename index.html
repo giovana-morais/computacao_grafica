@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+	<!DOCTYPE html>
 <html>
 	<head>
 		<meta charset=utf-8>
@@ -11,12 +11,15 @@
 	<body>
 		<script src="js/three.js"></script>
 		<script>
-			// vamo de novo
+			// TODO: incluir a biblioteca tween.js pra fazer o objeto se mover na malha e não apenas no próprio eixo
             var scene, camera, renderer;
             var sphere;
 
             init();
             render();
+
+						// movimento "estático".
+						move(sphere);
 
             function init(){
                 scene = new THREE.Scene();
@@ -34,7 +37,7 @@
                 sphere = new THREE.Mesh(geometry, material);
 
                 scene.add(sphere);
-        
+
                 camera.position.z = 15;
             }
 
@@ -43,6 +46,10 @@
 				sphere.rotation.y += 0.01;
 				sphere.rotation.x += 0.02;
 				renderer.render(scene, camera);
+			}
+
+			function move(object){
+				object.translateX(3);
 			}
 		</script>
 	</body>
