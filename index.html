@@ -1,4 +1,4 @@
-z	<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 	<head>
 		<meta charset=utf-8>
@@ -14,7 +14,7 @@ z	<!DOCTYPE html>
         <script src="js/OrbitControl.js"></script>
         <script src="js/OBJLoader.js"></script>
         <script src="js/MTLLoader.js"></script>
-        <script type='text/javascript' src='js/Tween.js'></script>
+      <!--  <script type='text/javascript' src='js/Tween.js'></script> -->
 		<script>
 
             if( !Detector.webgl){
@@ -52,11 +52,11 @@ z	<!DOCTYPE html>
 
 								var objLoader = new THREE.OBJLoader();
 								//objLoader.setMaterials(material);
-								objLoader.setPath(Astronaut/);
-								objLoader.load('Astronaut.obj',function	(object)){
+								objLoader.setPath('Astronaut/');
+								objLoader.load('Astronaut.obj',function	(object){
 									scene.add(object);
-								}
-								
+								});
+
                 camera.position.z = 15;
             }
 
