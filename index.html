@@ -21,11 +21,10 @@
                 Detector.addGetWebGLMessage();
             }
             var container;
-            var scene, camera, controls, renderer, controls;
+            var scene, camera, controls, renderer;
             var ambient;
             init();
             animate();
-
 /*
             // movimento "estático".
             move(sphere);
@@ -41,26 +40,28 @@
 								ambient = new THREE.AmbientLight(0xffffff, 1.0);
             		scene.add(ambient);
 
-                //var geometry = new THREE.SphereGeometry(5, 32, 32, 0, Math.PI * 2, 0, Math.PI * 2);
-                // MeshNormalMaterial = deixa com um degradezinho. dá pra enxergar melhor
-                // MeshBasicMaterial = vc tem que colocar a cor e ele deixa ela chapada no objeto
-                //var material = new THREE.MeshNormalMaterial();
-								//var material = new THREE.MeshBasicMaterial({ color: 00xffffff;})
-                //sphere = new THREE.Mesh(geometry, material);
 
-                //setupTween();
-                //scene.add(sphere);
+		            keyLight = new THREE.DirectionalLight(new THREE.Color('hsl(30, 100%, 75%)'), 1.0);
+		            keyLight.position.set(-100, 0, 100);
+		            fillLight = new THREE.DirectionalLight(new THREE.Color('hsl(240, 100%, 75%)'), 0.75);
+		            fillLight.position.set(100, 0, 100);
+		            backLight = new THREE.DirectionalLight(0xffffff, 1.0);
+		            backLight.position.set(100, 0, -100).normalize();
+
 								var mtlLoader = new THREE.MTLLoader();
-							             mtlLoader.setTexturePath('imgs/Puss\ In\ Boots/');
-							             mtlLoader.setPath('imgs/Puss\ In\ Boots/');
-							             mtlLoader.load('Puss_in_Boots.mtl', function (materials) {
+							             mtlLoader.setTexturePath('imgs/Robot/');
+							             mtlLoader.setPath('imgs/Robot/');
+							             mtlLoader.load('robot.mtl', function (materials) {
 							                 materials.preload();
-							                 //materials.materials.default.map.magFilter = THREE.NearestFilter;
-							                 //materials.materials.default.map.minFilter = THREE.LinearFilter;
+
+															 /*
+							                 materials.materials.default.map.magFilter = THREE.NearestFilter;
+							                 materials.materials.default.map.minFilter = THREE.LinearFilter;
+															 */
 															 var objLoader = new THREE.OBJLoader();
 							                 objLoader.setMaterials(materials);
-							                 objLoader.setPath('imgs/Puss\ In\ Boots/');
-							                 objLoader.load('Puss_in_Boots.obj',function	(object){
+							                 objLoader.setPath('imgs/Robot/');
+							                 objLoader.load('robot.obj',function	(object){
 							                     scene.add(object);
 							                 });
 							             });
@@ -73,20 +74,22 @@
 
 								container.appendChild(renderer.domElement);
 
-								controls = new THREE.OrbitControl(camera,renderer.domElement);
+								controls = new THREE.OrbitControls(camera, renderer.domElement);
 								controls.enableDamping = true;
 								controls.dampingFactor = 0.25;
-            }
+								controls.enableZoom = false;
 
+            }
             function animate(){
                 requestAnimationFrame(animate);
-								controls.update();
 								render();
                 // TWEEN.update();
             }
 
 			function render(){
+				controls.update();
 				renderer.render(scene, camera);
+
 			}
 
 			function move(object){

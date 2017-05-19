@@ -10,7 +10,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 0.467626
 illum 3
-map_Kd C:\\Users\\Valera\\Desktop\\моделирование\\модели\\текстуры\\000054_metall_texture.jpg
+map_Kd: \metal.png
 
 newmtl Metall2
 Ns 37.254902
@@ -21,7 +21,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 3
-map_Kd C:\\Users\\Valera\\Desktop\\моделирование\\модели\\текстуры\\000054_metall_texture.jpg
+map_Kd: \metal.png
 
 newmtl glaz
 Ns 96.078431
