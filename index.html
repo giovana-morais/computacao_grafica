@@ -49,15 +49,15 @@
                 //setupTween();
                 //scene.add(sphere);
 
+                camera.position.z = 3;
 
-								var objLoader = new THREE.OBJLoader();
-								//objLoader.setMaterials(material);
-								objLoader.setPath('Astronaut/');
-								objLoader.load('Astronaut.obj',function	(object){
-									scene.add(object);
-								});
+                var objLoader = new THREE.OBJLoader();
+                //objLoader.setMaterials(material);
+                objLoader.setPath('Astronaut/');
+                objLoader.load('Astronaut.obj',function	(object){
+                    scene.add(object);
+                });
 
-                camera.position.z = 15;
             }
 
             function animate(){
