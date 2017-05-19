@@ -55,8 +55,8 @@
 							             mtlLoader.setPath('imgs/Puss\ In\ Boots/');
 							             mtlLoader.load('Puss_in_Boots.mtl', function (materials) {
 							                 materials.preload();
-							                 materials.materials.default.map.magFilter = THREE.NearestFilter;
-							                 materials.materials.default.map.minFilter = THREE.LinearFilter;
+							                 //materials.materials.default.map.magFilter = THREE.NearestFilter;
+							                 //materials.materials.default.map.minFilter = THREE.LinearFilter;
 															 var objLoader = new THREE.OBJLoader();
 							                 objLoader.setMaterials(materials);
 							                 objLoader.setPath('imgs/Puss\ In\ Boots/');
