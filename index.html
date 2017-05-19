@@ -21,9 +21,8 @@
                 Detector.addGetWebGLMessage();
             }
             var container;
-            var scene, camera, renderer, control;
-            var sphere;
-
+            var scene, camera, renderer, controls;
+            var ambient;
             init();
             animate();
 
@@ -36,6 +35,9 @@
                 camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
 								camera.position.z = 10;
 
+								ambient = new THREE.AmbientLight(0xffffff, 1.0);
+            		scene.add(ambient);
+
                 //var geometry = new THREE.SphereGeometry(5, 32, 32, 0, Math.PI * 2, 0, Math.PI * 2);
                 // MeshNormalMaterial = deixa com um degradezinho. dá pra enxergar melhor
                 // MeshBasicMaterial = vc tem que colocar a cor e ele deixa ela chapada no objeto
@@ -45,8 +47,6 @@
 
                 //setupTween();
                 //scene.add(sphere);
-
-
 
                 var objLoader = new THREE.OBJLoader();
                 //objLoader.setMaterials(material);
