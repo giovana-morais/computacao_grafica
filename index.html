@@ -1,4 +1,4 @@
-	<!DOCTYPE html>
+z	<!DOCTYPE html>
 <html>
 	<head>
 		<meta charset=utf-8>
@@ -40,18 +40,26 @@
 
                 document.body.appendChild( renderer.domElement );
 
-                var geometry = new THREE.SphereGeometry(5, 32, 32, 0, Math.PI * 2, 0, Math.PI * 2);
+                //var geometry = new THREE.SphereGeometry(5, 32, 32, 0, Math.PI * 2, 0, Math.PI * 2);
                 // MeshNormalMaterial = deixa com um degradezinho. dá pra enxergar melhor
                 // MeshBasicMaterial = vc tem que colocar a cor e ele deixa ela chapada no objeto
                 var material = new THREE.MeshNormalMaterial();
-                sphere = new THREE.Mesh(geometry, material);
-                
-                setupTween();
-                scene.add(sphere);
+                //sphere = new THREE.Mesh(geometry, material);
 
+                //setupTween();
+                //scene.add(sphere);
+
+
+								var objLoader = new THREE.OBJLoader();
+								//objLoader.setMaterials(material);
+								objLoader.setPath(Astronaut/);
+								objLoader.load('Astronaut.obj',function	(object)){
+									scene.add(object);
+								}
+								
                 camera.position.z = 15;
             }
-            
+
             function animate(){
                 render();
                 requestAnimationFrame(animate);
@@ -65,6 +73,8 @@
 			function move(object){
 				object.translateX(3);
 			}
+
+
 
 		</script>
 	</body>
