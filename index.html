@@ -45,6 +45,9 @@
 
 								camera_2 = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 1000);
 								group.add(camera_2);
+								camera_2.position.set(-10, 15, 10);
+								camera_2.lookAt(scene.position);
+
 
 								ambient = new THREE.AmbientLight(0xffffff, 1.0);
 								group.add(ambient);
@@ -123,14 +126,17 @@
 				group.add(esf);
 			}
 
+			// TODO: os controles pararam de funcionar e não consigo mais mexer o objeto. corrigir.
 			function render(){
 				controls.update();
 				//renderer.render(scene, camera_1);
 				if(keyboard.pressed("1")){
 					renderer.render(scene, camera_1);
+					controls.update();
 				}
 				if(keyboard.pressed("2")) {
-						renderer.render(scene, camera_2);
+					renderer.render(scene, camera_2);
+					controls.update();
 				}
 			}
 
