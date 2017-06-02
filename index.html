@@ -92,10 +92,15 @@
 
 								container.appendChild(renderer.domElement);
 
-								controls = new THREE.OrbitControls(camera_1, renderer.domElement);
-								controls.enableDamping = true;
-								controls.dampingFactor = 0.25;
-								controls.enableZoom = false;
+								control_1 = new THREE.OrbitControls(camera_1, renderer.domElement);
+								control_1.enableDamping = true;
+								control_1.dampingFactor = 0.25;
+								control_1.enableZoom = false;
+
+								control_2 = new THREE.OrbitControls(camera_2, renderer.domElement);
+								control_2.enableDamping = true;
+								control_2.dampingFactor = 0.25;
+								control_2.enableZoom = false;
 
 
 
@@ -128,15 +133,16 @@
 
 			// TODO: os controles pararam de funcionar e não consigo mais mexer o objeto. corrigir.
 			function render(){
-				controls.update();
+				control_1.update();
+				control_2.update();
 				//renderer.render(scene, camera_1);
 				if(keyboard.pressed("1")){
 					renderer.render(scene, camera_1);
-					controls.update();
+					control_1.update();
 				}
 				if(keyboard.pressed("2")) {
 					renderer.render(scene, camera_2);
-					controls.update();
+					control_2.update();
 				}
 			}
 
