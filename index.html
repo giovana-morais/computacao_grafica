@@ -2,7 +2,7 @@ z<!DOCTYPE html>
 <html>
 	<head>
 		<meta charset=utf-8>
-		<title>Robozito & migos</title>
+		<title>RobSON & migos</title>
 		<style>
 			body { margin: 0; }
 			canvas { width: 100%; height: 100% }
@@ -49,6 +49,10 @@ z<!DOCTYPE html>
 								camera_2.lookAt(scene.position);
 
 
+								camera_3 new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 0.1, 1000);
+								group.add(camera_3);
+
+
 								ambient = new THREE.AmbientLight(0xffffff, 1.0);
 								group.add(ambient);
 
@@ -87,9 +91,9 @@ z<!DOCTYPE html>
 								SUBDIVISIONS = 20;
 								geometry = new THREE.Geometry();
 								curve = new THREE.QuadraticBezierCurve3();
-								curve.v0 = new THREE.Vector3(x0, y0, 0);
-								curve.v1 = new THREE.Vector3(x1, y1, 0);
-								curve.v2 = new THREE.Vector3(x2, y2, 0);
+								curve.v0 = new THREE.Vector3(0, 0, 0);
+								curve.v1 = new THREE.Vector3(4, 10, 0);
+								curve.v2 = new THREE.Vector3(10, -3, 0);
 								for (j = 0; j < SUBDIVISIONS; j++) {
 								   geometry.vertices.push( curve.getPoint(j / SUBDIVISIONS) )
 								}
@@ -97,6 +101,30 @@ z<!DOCTYPE html>
 								material = new THREE.LineBasicMaterial( { color: 0xffffff, linewidth: 2 } );
 								line = new THREE.Line(geometry, material);
 								group.add(line);
+
+
+								// tentando mexer na camera 3 pra fazer ela ficar bonitinha seguindo o RobSON
+								var selectedObject = mtlLoader;
+								var tween = new TWEEN.Tween(camera_3.position).to({
+								    x: selectedObject.position.x,
+								    y: selectedObject.position.y,
+								    z: 1
+								}).easing(TWEEN.Easing.Linear.None).onUpdate(function () {
+								    camera_3.lookAt(camera_3.target);
+								}).onComplete(function () {
+								    camera_3.lookAt(selectedObject.position);
+								}).start();
+
+								var tween = new TWEEN.Tween(camera_3.target).to({
+								    x: selectedObject.position.x,
+								    y: selectedObject.position.y,
+								    z: 0
+								}).easing(TWEEN.Easing.Linear.None).onUpdate(function () {
+								}).onComplete(function () {
+								    camera_3.lookAt(selectedObject.position);
+								}).start();
+
+
 
 								scene.add(group);
 								renderer = new THREE.WebGLRenderer();
