@@ -15,18 +15,14 @@
         <script src="js/OBJLoader.js"></script>
         <script src="js/MTLLoader.js"></script>
 				<script src="js/threex.keyboardstate.js"></script>
-				<script src="https://code.createjs.com/createjs-2015.11.26.min.js"></script>
-
-
-				<script type='text/javascript' src='js/Tween.js'></script>
-
+				<script src='js/Tween.js'></script>
 		<script>
 
             if(!Detector.webgl){
                 Detector.addGetWebGLMessage();
             }
             var container;
-            var scene, camera_1, camera_2, camera_3, controls, renderer;
+            var scene, camera_1, camera_2, controls, renderer;
 						var group = new THREE.Group();
             var ambient;
 						var keyboard = new THREEx.KeyboardState();
@@ -78,7 +74,10 @@
 								  objLoader.setMaterials(materials);
 								  objLoader.setPath('imgs/Robot/');
 									objLoader.load('robot.obj',function	(object){
-										group.add(object)
+										object.position.x = 10;
+										object.position.y = 10;
+										oject.position.z = 100;
+										group.add(object);
 								  });
 							  });
 
@@ -103,17 +102,12 @@
 								line = new THREE.Line(geometry, material);
 								group.add(line);
 
-								/* ---------------------------------------------------------------------------------------*/
+
 								// tentando mexer na camera 3 pra fazer ela ficar bonitinha seguindo o RobSON
-								var position = {x : 0, y : 100};
-								var target = {x : 200, y : -100};
-								console.log(position.x);
-								console.log(position.y);
-								console.log(target.x);
-								console.log(target.y);
-								console.log(mtlLoader.x);
 								var selectedObject = mtlLoader;
-								var tween = new createjs.Tween(camera_3.position).to({
+
+
+								var tween = new TWEEN.Tween(camera_3.position).to({
 								    x: selectedObject.position.x,
 								    y: selectedObject.position.y,
 								    z: 1
@@ -123,9 +117,9 @@
 								    camera_3.lookAt(selectedObject.position);
 								}).start();
 
-								var tween = new createjs.Tween(camera_3.target).to({
-								    x: selectedObject.target.x,
-								    y: selectedObject.target.y,
+								var tween = new TWEEN.Tween(camera_3.target).to({
+								    x: selectedObject.position.x,
+								    y: selectedObject.position.y,
 								    z: 0
 								}).easing(TWEEN.Easing.Linear.None).onUpdate(function () {
 								}).onComplete(function () {
@@ -133,7 +127,7 @@
 								}).start();
 
 
-								/* ---------------------------------------------------------------------------------------*/	
+
 								scene.add(group);
 								renderer = new THREE.WebGLRenderer();
 								renderer.setPixelRatio(window.devicePixelRatio);
