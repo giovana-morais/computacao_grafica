@@ -14,8 +14,10 @@
         <script src="js/OrbitControl.js"></script>
         <script src="js/OBJLoader.js"></script>
         <script src="js/MTLLoader.js"></script>
+        <script src="https://code.createjs.com/createjs-2015.11.26.min.js"></script>
 				<script src="js/threex.keyboardstate.js"></script>
 				<script src='js/Tween.js'></script>
+				
 		<script>
 
             if(!Detector.webgl){
@@ -76,7 +78,7 @@
 									objLoader.load('robot.obj',function	(object){
 										object.position.x = 10;
 										object.position.y = 10;
-										oject.position.z = 100;
+										object.position.z = 100;
 										group.add(object);
 								  });
 							  });
@@ -87,7 +89,10 @@
 								insereCubo(5, 0, 0);
 								insereCubo(0, 4, 0);
 								insereEsfera(-5, 0, 0);
+/* ---------------------------------------------------------------------------------------------- */
 
+								console.log(mtlLoader.position);
+								console.log(camera_3.position.x);
 								SUBDIVISIONS = 20;
 								geometry = new THREE.Geometry();
 								curve = new THREE.QuadraticBezierCurve3();
@@ -102,30 +107,38 @@
 								line = new THREE.Line(geometry, material);
 								group.add(line);
 
-
+								var target = {x: 100, y: 200, z: -100};
 								// tentando mexer na camera 3 pra fazer ela ficar bonitinha seguindo o RobSON
-								var selectedObject = mtlLoader;
+								var selectedObject = camera_3.position;
 
+								//console.log("camera_3 x:", selectedObject.position.x);
+								//console.log("camera_3 y:", selectedObject.position.y);
+								//console.log("camera_3 z:", selectedObject.position.z);
 
-								var tween = new TWEEN.Tween(camera_3.position).to({
+								console.log("camera_3 z:", selectedObject.z);
+
+								var tween = new createjs.Tween.selectedObject.to({
 								    x: selectedObject.position.x,
 								    y: selectedObject.position.y,
-								    z: 1
+								    z: selectedObject.position.z 
 								}).easing(TWEEN.Easing.Linear.None).onUpdate(function () {
 								    camera_3.lookAt(camera_3.target);
 								}).onComplete(function () {
 								    camera_3.lookAt(selectedObject.position);
 								}).start();
 
-								var tween = new TWEEN.Tween(camera_3.target).to({
-								    x: selectedObject.position.x,
-								    y: selectedObject.position.y,
+								var tween = new createjs.Tween.target.to({
+								    x: selectedObject.target.x,
+								    y: selectedObject.target.y,
 								    z: 0
 								}).easing(TWEEN.Easing.Linear.None).onUpdate(function () {
 								}).onComplete(function () {
 								    camera_3.lookAt(selectedObject.position);
 								}).start();
 
+
+
+/* ---------------------------------------------------------------------------------------------- */
 
 
 								scene.add(group);
