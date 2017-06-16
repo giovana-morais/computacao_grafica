@@ -121,11 +121,11 @@ function inserePlano(x, y){
 	var plano = new THREE.Mesh(geom_plano, mat_plano);
 	plano.position.set(0, -3, 0);
 	plano.rotation.x = 1.5;
+	plano.material.side = THREE.DoubleSide;
 	group.add(plano);
 }
 
 // curva quadrática de bezier
-// TODO: tentar inserir depois a curva cúbica
 function criaCurva(){
 	var curva = new THREE.QuadraticBezierCurve(
 		new THREE.Vector2( -10, 0 ),
@@ -136,9 +136,9 @@ function criaCurva(){
 	var path = new THREE.Path( curva.getPoints( 50 ) );
 
 	var geometry = path.createPointsGeometry( 50 );
-	var material = new THREE.LineBasicMaterial( { color : 0xff0000 } );
+	var material = new THREE.LineBasicMaterial( { color : 0xff0000, linewidth: 0 } );
 
-	var curveObject = new THREE.Line( geometry, material );
+	var curveObject = new THREE.Line(geometry, material);
 
 	group.add(curveObject);
 }
@@ -155,6 +155,7 @@ function render(){
 		control_2.update();
 	}
 
+	// TODO: achar um jeito de o movimento funcionar para a câmera 2 tbm
 	theta += 1;
   	camera_1.position.x = radius * Math.sin( THREE.Math.degToRad( theta ) );
   	camera_1.position.y = radius * Math.sin( THREE.Math.degToRad( theta ) );
