@@ -3,6 +3,7 @@ var scene, camera_1, camera_2, controls, renderer;
 var group = new THREE.Group();
 var ambient;
 var keyboard = new THREEx.KeyboardState();
+var theta = 0, radius = 70;
 
 function init(){
 	container = document.createElement('div');
@@ -58,6 +59,7 @@ function init(){
 
 
 	inserePlano(10, 10);
+	criaCurva();
 
 	// TODO: inserir qualquer outro objeto que não seja nativo do three.js pra testar o posicionamento
 	//insereCubo(5, 0, 0);
@@ -122,6 +124,25 @@ function inserePlano(x, y){
 	group.add(plano);
 }
 
+// curva quadrática de bezier
+// TODO: tentar inserir depois a curva cúbica
+function criaCurva(){
+	var curva = new THREE.QuadraticBezierCurve(
+		new THREE.Vector2( -10, 0 ),
+		new THREE.Vector2( 20, 15 ),
+		new THREE.Vector2( 10, 0 )
+	);
+
+	var path = new THREE.Path( curva.getPoints( 50 ) );
+
+	var geometry = path.createPointsGeometry( 50 );
+	var material = new THREE.LineBasicMaterial( { color : 0xff0000 } );
+
+	var curveObject = new THREE.Line( geometry, material );
+
+	group.add(curveObject);
+}
+
 function render(){
 	control_1.update();
 	control_2.update();
@@ -133,5 +154,11 @@ function render(){
 		renderer.render(scene, camera_2);
 		control_2.update();
 	}
+
+	theta += 1;
+  	camera_1.position.x = radius * Math.sin( THREE.Math.degToRad( theta ) );
+  	camera_1.position.y = radius * Math.sin( THREE.Math.degToRad( theta ) );
+	camera_1.position.z = radius * Math.cos( THREE.Math.degToRad( theta ) );
+	camera_1.lookAt( scene.position );
 }
 
