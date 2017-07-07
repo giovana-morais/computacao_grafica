@@ -62,9 +62,9 @@ function init(){
 	criaCurva();
 
 	// TODO: inserir qualquer outro objeto que não seja nativo do three.js pra testar o posicionamento
-	//insereCubo(5, 0, 0);
-	//insereCubo(0, 4, 0);
-	//insereEsfera(-5, 0, 0);
+    insereCubo(5, 0, 0);
+    insereCubo(0, 4, 0);
+    insereEsfera(-5, 0, 0);
 	scene.add(group);
 
 	renderer = new THREE.WebGLRenderer();
