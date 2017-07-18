@@ -9,8 +9,7 @@ var action = {}, mixer;
 var activeActionName = 'idle';
 
 var arrAnimations = [
-  'sarrada_simples',
-  'pescocinho'
+  'caminhada'
 ];
 var actualAnimation = 0;
 
@@ -51,7 +50,7 @@ function init () {
 
   });
 
-  loader.load('./teste/stormets.json', function (geometry, materials) {
+  loader.load('../caminhada.json', function (geometry, materials) {
     materials.forEach(function (material) {
       material.skinning = true;
     });
@@ -62,23 +61,27 @@ function init () {
 
     mixer = new THREE.AnimationMixer(character);
 
+    /*
     action.hello = mixer.clipAction(geometry.animations[ 0 ]);
     action.idle = mixer.clipAction(geometry.animations[ 1 ]);
     action.run = mixer.clipAction(geometry.animations[ 3 ]);
-    action.walk = mixer.clipAction(geometry.animations[ 4 ]);
+    */
+    action.caminhada = mixer.clipAction(geometry.animations[ 0 ]);
 
+    /*
     action.hello.setEffectiveWeight(1);
     action.idle.setEffectiveWeight(1);
     action.run.setEffectiveWeight(1);
-    action.walk.setEffectiveWeight(1);
+    */
+    action.caminhada.setEffectiveWeight(1);
 
     action.hello.setLoop(THREE.LoopOnce, 0);
     action.hello.clampWhenFinished = true;
 
-    action.hello.enabled = true;
+/*    action.hello.enabled = true;
     action.idle.enabled = true;
-    action.run.enabled = true;
-    action.walk.enabled = true;
+    action.run.enabled = true; */
+    action.caminhada.enabled = true;
 
     scene.add(character);
 
@@ -89,7 +92,7 @@ function init () {
 
     isLoaded = true;
 
-    action.idle.play();
+    action.caminhada.play();
   });
 }
 
