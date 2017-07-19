@@ -6,10 +6,10 @@ var textureLoader = new THREE.TextureLoader();
 var loader = new THREE.JSONLoader();
 var isLoaded = false;
 var action = {}, mixer;
-var activeActionName = 'idle';
+var activeActionName = 'marcha';
 
 var arrAnimations = [
-  'caminhada'
+  'marcha'
 ];
 var actualAnimation = 0;
 
@@ -50,7 +50,7 @@ function init () {
 
   });
 
-  loader.load('../caminhada.json', function (geometry, materials) {
+  loader.load('stormets.json', function (geometry, materials) {
     materials.forEach(function (material) {
       material.skinning = true;
     });
@@ -61,27 +61,14 @@ function init () {
 
     mixer = new THREE.AnimationMixer(character);
 
-    /*
-    action.hello = mixer.clipAction(geometry.animations[ 0 ]);
-    action.idle = mixer.clipAction(geometry.animations[ 1 ]);
-    action.run = mixer.clipAction(geometry.animations[ 3 ]);
-    */
-    action.caminhada = mixer.clipAction(geometry.animations[ 0 ]);
+    action.marcha = mixer.clipAction(geometry.animations[ 0 ]);
 
-    /*
-    action.hello.setEffectiveWeight(1);
-    action.idle.setEffectiveWeight(1);
-    action.run.setEffectiveWeight(1);
-    */
-    action.caminhada.setEffectiveWeight(1);
+    action.marcha.setEffectiveWeight(1);
 
-    action.hello.setLoop(THREE.LoopOnce, 0);
-    action.hello.clampWhenFinished = true;
+  /*  action.hello.setLoop(THREE.LoopOnce, 0);
+    action.hello.clampWhenFinished = true; */
 
-/*    action.hello.enabled = true;
-    action.idle.enabled = true;
-    action.run.enabled = true; */
-    action.caminhada.enabled = true;
+    action.marcha.enabled = true;
 
     scene.add(character);
 
@@ -92,7 +79,7 @@ function init () {
 
     isLoaded = true;
 
-    action.caminhada.play();
+    action.marcha.play();
   });
 }
 
