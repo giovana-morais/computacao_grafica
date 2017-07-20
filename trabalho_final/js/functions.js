@@ -11,9 +11,7 @@ var activeActionName = 'marcha';
 // arrumar os nomes qnd der certo
 var arrAnimations = [
   'marcha',
-  'walk',
- 'run',
- 'hello'
+  'danca'
 ];
 var actualAnimation = 0;
 
@@ -34,7 +32,7 @@ function init () {
   container = document.getElementById('container');
   container.appendChild(renderer.domElement);
 
-  camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
+  camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
   camera.position.set(0, 1.2, 2.5);
   listener = new THREE.AudioListener();
   camera.add(listener);
@@ -55,7 +53,7 @@ function init () {
 
   });
 
-  loader.load('stormets.json', function (geometry, materials) {
+  loader.load('danca2.json', function (geometry, materials) {
     materials.forEach(function (material) {
       material.skinning = true;
     });
@@ -67,22 +65,15 @@ function init () {
     mixer = new THREE.AnimationMixer(character);
 
     action.marcha = mixer.clipAction(geometry.animations[ 0 ]);
-    action.hello = mixer.clipAction(geometry.animations[ 1 ]);
-    action.run = mixer.clipAction(geometry.animations[ 3 ]);
-    action.walk = mixer.clipAction(geometry.animations[ 4 ]);
-
+    action.danca = mixer.clipAction(geometry.animations[ 1 ]);
 
     action.marcha.setEffectiveWeight(1);
-    action.hello.setEffectiveWeight(1);
-    action.run.setEffectiveWeight(1);
-    action.walk.setEffectiveWeight(1);
+    action.danca.setEffectiveWeight(1);
 
-    /*  action.hello.setLoop(THREE.LoopOnce, 0);
-      action.hello.clampWhenFinished = true; */
+/*      action.danca.setLoop(THREE.LoopOnce, 0);
+      action.danca.clampWhenFinished = true; */
 
-    action.hello.enabled = true;
-   action.run.enabled = true;
-   action.walk.enabled = true;
+    action.danca.enabled = true;
     action.marcha.enabled = true;
 
     scene.add(character);
