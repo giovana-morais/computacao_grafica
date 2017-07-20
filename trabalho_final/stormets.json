@@ -36280,7 +36280,7 @@
         "colorEmissive":[0,0,0],
         "shading":"phong",
         "opacity":1,
-        "transparent":true,
+        "transparent":false,
         "visible":true,
         "wireframe":false,
         "blending":"NormalBlending",
