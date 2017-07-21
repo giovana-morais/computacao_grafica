@@ -11,7 +11,7 @@ var activeActionName = 'marcha';
 // arrumar os nomes qnd der certo
 var arrAnimations = [
   'marcha',
-  'danca'
+  'merge'
 ];
 var actualAnimation = 0;
 
@@ -53,7 +53,7 @@ function init () {
 
   });
 
-  loader.load('danca2.json', function (geometry, materials) {
+  loader.load('Stormtrooper.json', function (geometry, materials) {
     materials.forEach(function (material) {
       material.skinning = true;
     });
@@ -65,15 +65,15 @@ function init () {
     mixer = new THREE.AnimationMixer(character);
 
     action.marcha = mixer.clipAction(geometry.animations[ 0 ]);
-    action.danca = mixer.clipAction(geometry.animations[ 1 ]);
+    action.merge = mixer.clipAction(geometry.animations[ 1 ]);
 
     action.marcha.setEffectiveWeight(1);
-    action.danca.setEffectiveWeight(1);
+    action.merge.setEffectiveWeight(1);
 
 /*      action.danca.setLoop(THREE.LoopOnce, 0);
       action.danca.clampWhenFinished = true; */
 
-    action.danca.enabled = true;
+    action.merge.enabled = true;
     action.marcha.enabled = true;
 
     scene.add(character);
