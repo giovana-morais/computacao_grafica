@@ -1,4 +1,4 @@
-var clock, container, camera, scene, renderer, controls, listener;
+var clock, container, camera,camera_2, scene, renderer, controls, listener;
 var id, i=0;
 var ground, storminho, yoda,cloneyoda;
 var light;
@@ -36,6 +36,11 @@ function init () {
   camera.position.set(0, 2, 10);
   listener = new THREE.AudioListener();
   camera.add(listener);
+
+  camera_2 = new THREE.PerspectiveCamera(100, window.innerWidth / window.innerHeight, 0.1, 1000);
+	camera_2.position.set(0, 2, 10);
+  listener2 = new THREE.AudioListener();
+  camera.add(listener2);
 
   controls = new THREE.OrbitControls(camera, renderer.domElement);
   controls.target = new THREE.Vector3(0, 0.6, 0);
@@ -189,6 +194,27 @@ function init () {
 
   });
 
+
+  var objLoader = new THREE.OBJLoader();
+  objLoader.setPath('imgs/JAWA/');
+  objLoader.load('Star_wars_JAWA.obj',function (object){
+    object.position.x = 4;
+    object.position.y = -0.5;
+    //object.position.z = 0;
+
+    scene.add(object);
+    });
+
+
+  var mtlLoader = new THREE.MTLLoader();
+  mtlLoader.setTexturePath('imgs/JAWA/');
+  mtlLoader.setPath('imgs/JAWA/');
+  mtlLoader.load('Star_wars_JAWA.mtl', function (materials) {
+    materials.preload();
+    objLoader.setMaterials(materials);
+  });
+
+
 }
 
 function onWindowResize () {
@@ -200,7 +226,6 @@ function onWindowResize () {
 
 function onDoubleClick(){
   cancelAnimationFrame( id );
-//  animate();
 }
 
 function animate () {
@@ -213,55 +238,29 @@ function animate () {
 // Pode mover um de cada vez, pressionando 1,2 ou 3 e tb pode mover todos ao mesmo tempo, mantendo os botões pressionados
 function render () {
     var delta = clock.getDelta();
+    var cam;
+    if(keyboard.pressed("c")) {
+      cam = camera_2;
+    }
+    else {
+      cam = camera;
+    }
+
 
     if(keyboard.pressed("1")) {
-      renderer.render(scene, camera);
+      renderer.render(scene, cam);
         mixer_storminho.update(delta);
     }
 
     if(keyboard.pressed("2")) {
-      renderer.render(scene, camera);
+      renderer.render(scene, cam);
         mixer_yoda.update(delta);
     }
     if(keyboard.pressed("3")) {
-      renderer.render(scene, camera);
+      renderer.render(scene, cam);
         mixer_clone.update(delta);
     }
 
-    renderer.render(scene, camera);
+
+    renderer.render(scene, cam);
 }
-
-/* function adicionaYoda(x, y){
-    // TODO: adicionar aqui o negócio do animation group lá pra gente conseguir
-    // fazer eles fazerem todos a mesma dancinha
-  loader.load('yoda.json', function (geometry, materials) {
-    materials.forEach(function (material) {
-      material.skinning = true;
-    });
-    yoda = new THREE.SkinnedMesh(
-      geometry,
-      new THREE.MeshFaceMaterial(materials)
-    );
-
-    yoda.position.x = x;
-    yoda.position.y = y;
-    yoda.updateMatrix();
-
-    mixer_yoda = new THREE.AnimationMixer(yoda);
-
-    scene.add(yoda);
-
-    action.dancayoda = mixer_yoda.clipAction(geometry.animations[ 0 ]);
-    action.dancayoda.setEffectiveWeight(1);
-    action.dancayoda.enabled = true;
-
-    window.addEventlistener('resize', onwindowResize, false);
-     window.addEventListener('click', onDoubleClick, false);
-    animate();
-
-    isLoaded = true;
-    action.dancayoda.play();
-
-  });
-}
-*/
