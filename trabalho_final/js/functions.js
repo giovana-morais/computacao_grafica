@@ -62,6 +62,11 @@ function init () {
       new THREE.MeshFaceMaterial(materials)
     );
 
+    // seta a posição inicial do personagem
+    character.position.x = -2;
+    character.position.y = -2;
+    character.updateMatrix();
+
     mixer = new THREE.AnimationMixer(character);
 
     action.marcha = mixer.clipAction(geometry.animations[ 0 ]);
