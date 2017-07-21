@@ -15143,7 +15143,7 @@
         "colorDiffuse":[0.64,0.64,0.64],
         "specularCoef":49,
         "colorSpecular":[0,0,0],
-        "mapDiffuse":"Yoda_D.dds",
+        "mapDiffuse":"Yoda_D.png",
         "mapDiffuseAnisotropy":1,
         "mapDiffuseWrap":["repeat","repeat"],
         "mapDiffuseRepeat":[1,1]

@@ -62,8 +62,8 @@ function init () {
     );
 
     // seta a posição inicial do personagem
-    character.position.x = -2;
-    character.position.y = -2;
+    character.position.x = 0;
+    character.position.y = 0;
     character.updateMatrix();
 
     mixer = new THREE.AnimationMixer(character);
@@ -85,7 +85,7 @@ function init () {
   });
 
 
-  /*loader.load('yoda.json', function (geometry, materials) {
+  loader.load('yoda.json', function (geometry, materials) {
     materials.forEach(function (material) {
       material.skinning = true;
     });
@@ -95,14 +95,14 @@ function init () {
     );
 
     // seta a posição inicial do personagem
-    character.position.x = -2;
+    character.position.x = -4;
     character.position.y = -2;
     character.updateMatrix();
 
     mixer = new THREE.AnimationMixer(character);
 
 
-    action.dancayoda = mixer.clipAction(geometry.animations[ 2 ]);
+    action.dancayoda = mixer.clipAction(geometry.animations[ 0 ]);
 
     action.dancayoda.setEffectiveWeight(1);
 
@@ -115,9 +115,9 @@ function init () {
 
     isLoaded = true;
 
-    action.danca.play();
+    action.dancayoda.play();
   });
-*/
+
 
 }
 
