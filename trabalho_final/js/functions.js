@@ -78,6 +78,28 @@ function init () {
     ground.doubleSided = true;
     scene.add(ground);
 
+
+    // o r2 tem que aparecer sozinho e depois os outros têm que aparecer
+    loader.load('r2.json', function(geometry, materials){
+        materials.forEach(function (material){
+            material.skinning = true;
+        });
+
+        r2 = new THREE.SkinnedMesh(geometry, new THREE.MeshFaceMaterial(materials));
+        mixer_r2 = new THREE.AnimationMixer(r2);
+        action.movimento = mixer_r2.clipAction(geometry.animations[0]);
+        action.movimento.clampWhenFinished = true;
+        action.movimento.play();
+        mixer_r2.addEventListener('finished', function(e){
+            console.log("acabou, yesssss! agora temos que mudar de cena");
+//        animate();
+//       isLoaded = true;
+        });
+        window.addEventListener('resize', onWindowResize, false);
+        scene.add(r2);
+    });
+        
+
   loader.load('Stormtrooper.json', function (geometry, materials) {
 
     materials.forEach(function (material) {
@@ -96,44 +118,32 @@ function init () {
     action.danca = mixer_storminho.clipAction(geometry.animations[ 2 ]);
     action.danca.setEffectiveWeight(1);
     action.danca.enabled = true;
-    scene.add(storminho);
+    //scene.add(storminho);
 
     window.addEventListener('resize', onWindowResize, false);
     animate();
 
     isLoaded = true;
-    action.danca.play();
+  //  action.danca.play();
   });
 
+/*
+    adicionaYoda(-4, -0.5);
+    adicionaYoda(4, 0,5);
 
-  loader.load('yoda.json', function (geometry, materials) {
-    materials.forEach(function (material) {
-      material.skinning = true;
-    });
-    yoda = new THREE.SkinnedMesh(
-      geometry,
-      new THREE.MeshFaceMaterial(materials)
-    );
-
-    yoda.position.x = -4;
-    yoda.position.y = -0.5;
-    yoda.updateMatrix();
-
-    mixer_yoda = new THREE.AnimationMixer(yoda);
-
+    // aqui temos que dar um jeito de retornar o mixer_yoda. talvez colocar um
+    // retorno na função? sei lá. 
     action.dancayoda = mixer_yoda.clipAction(geometry.animations[ 0 ]);
     action.dancayoda.setEffectiveWeight(1);
     action.dancayoda.enabled = true;
-    scene.add(yoda);
 
-    window.addEventListener('resize', onWindowResize, false);
+    window.addeventlistener('resize', onwindowresize, false);
     animate();
 
     isLoaded = true;
-    action.dancayoda.play();
-  });
+//    action.dancayoda.play();
 
-
+*/
 }
 
 function onWindowResize () {
@@ -151,8 +161,33 @@ function animate () {
 }
 
 function render () {
-  var delta = clock.getDelta();
-  mixer_storminho.update(delta);
-  mixer_yoda.update(delta);
-  renderer.render(scene, camera);
+    var delta = clock.getDelta();
+//  mixer_storminho.update(delta);
+//  mixer_yoda.update(delta);
+//    mixer_r2.update(delta);
+    renderer.render(scene, camera);
 }
+/*
+function adicionaYoda(x, y){
+    // TODO: adicionar aqui o negócio do animation group lá pra gente conseguir
+    // fazer eles fazerem todos a mesma dancinha
+  loader.load('yoda.json', function (geometry, materials) {
+    materials.forEach(function (material) {
+      material.skinning = true;
+    });
+    yoda = new THREE.SkinnedMesh(
+      geometry,
+      new THREE.MeshFaceMaterial(materials)
+    );
+
+    yoda.position.x = x; 
+    yoda.position.y = y;
+    yoda.updateMatrix();
+
+    mixer_yoda = new THREE.AnimationMixer(yoda);
+
+    //scene.add(yoda);
+  });
+}
+
+*/
