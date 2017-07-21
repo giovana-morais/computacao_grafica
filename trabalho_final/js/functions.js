@@ -1,11 +1,12 @@
 var clock, container, camera, scene, renderer, controls, listener;
-var i;
-var ground, storminho, yoda;
+var id, i=0;
+var ground, storminho, yoda,cloneyoda;
 var light;
 var textureLoader = new THREE.TextureLoader();
 var loader = new THREE.JSONLoader();
+var keyboard = new THREEx.KeyboardState();
 var isLoaded = false;
-var action = {}, mixer_storminho, mixer_yoda;
+var action = {}, mixer_storminho,mixer_yoda,mixer_clone;
 
 // arrumar os nomes qnd der certo
 var arrAnimations = [
@@ -32,7 +33,7 @@ function init () {
   container.appendChild(renderer.domElement);
 
   camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-  camera.position.set(0, 2, 8);
+  camera.position.set(0, 2, 10);
   listener = new THREE.AudioListener();
   camera.add(listener);
 
@@ -42,12 +43,12 @@ function init () {
   light = new THREE.AmbientLight(0xffffff, 1);
   scene.add(light);
 
-    /* plano de fundo 
+    /* plano de fundo
      * OBS: com certeza deve ter um jeito mais simples de fazer isso usando só
      * um plano, mas não sou capaz de pensar no momento, então vai ser usando
      * esse baita cubo mesmo.
      */
-    
+
     // obs2: vamos ter que mudar a imagem pq ela precisa ser quadrada. mas isso
     // eu faço quando eu acordar
     var urls = [
@@ -67,7 +68,7 @@ function init () {
     ground_textura.wrapT = THREE.RepeatWrapping;
     ground_textura.repeat.x = 256;
     ground_textura.repeat.y = 256;
-    
+
     var ground_material = new THREE.MeshBasicMaterial({map: ground_textura, transparent: true});
 
     var ground_geometria = new THREE.PlaneGeometry(400, 400);
@@ -80,7 +81,7 @@ function init () {
 
 
     // o r2 tem que aparecer sozinho e depois os outros têm que aparecer
-    loader.load('r2.json', function(geometry, materials){
+/*    loader.load('r2.json', function(geometry, materials){
         materials.forEach(function (material){
             material.skinning = true;
         });
@@ -97,8 +98,8 @@ function init () {
         });
         window.addEventListener('resize', onWindowResize, false);
         scene.add(r2);
-    });
-        
+    }); */
+
 
   loader.load('Stormtrooper.json', function (geometry, materials) {
 
@@ -118,32 +119,76 @@ function init () {
     action.danca = mixer_storminho.clipAction(geometry.animations[ 2 ]);
     action.danca.setEffectiveWeight(1);
     action.danca.enabled = true;
-    //scene.add(storminho);
+    scene.add(storminho);
 
     window.addEventListener('resize', onWindowResize, false);
+     window.addEventListener('click', onDoubleClick, false);
     animate();
 
     isLoaded = true;
-  //  action.danca.play();
+    action.danca.play();
   });
 
-/*
-    adicionaYoda(-4, -0.5);
-    adicionaYoda(4, 0,5);
 
-    // aqui temos que dar um jeito de retornar o mixer_yoda. talvez colocar um
-    // retorno na função? sei lá. 
+  loader.load('yoda.json', function (geometry, materials) {
+    materials.forEach(function (material) {
+      material.skinning = true;
+    });
+    yoda = new THREE.SkinnedMesh(
+      geometry,
+      new THREE.MeshFaceMaterial(materials)
+    );
+
+    yoda.position.x = -4;
+    yoda.position.y = -0.5;
+    yoda.updateMatrix();
+
+    mixer_yoda = new THREE.AnimationMixer(yoda);
+
     action.dancayoda = mixer_yoda.clipAction(geometry.animations[ 0 ]);
     action.dancayoda.setEffectiveWeight(1);
     action.dancayoda.enabled = true;
+        scene.add(yoda);
 
-    window.addeventlistener('resize', onwindowresize, false);
+    window.addEventListener('resize', onWindowResize, false);
+    window.addEventListener('click', onDoubleClick, false);
     animate();
 
     isLoaded = true;
-//    action.dancayoda.play();
+    action.dancayoda.play();
 
-*/
+  });
+
+
+  loader.load('yoda.json', function (geometry, materials) {
+    materials.forEach(function (material) {
+      material.skinning = true;
+    });
+    cloneyoda = new THREE.SkinnedMesh(
+      geometry,
+      new THREE.MeshFaceMaterial(materials)
+    );
+
+    cloneyoda.position.x = 4;
+    cloneyoda.position.y = -0.5;
+    cloneyoda.updateMatrix();
+
+    mixer_clone = new THREE.AnimationMixer(cloneyoda);
+
+    action.dancayoda = mixer_clone.clipAction(geometry.animations[ 0 ]);
+    action.dancayoda.setEffectiveWeight(1);
+    action.dancayoda.enabled = true;
+        scene.add(cloneyoda);
+
+    window.addEventListener('resize', onWindowResize, false);
+    window.addEventListener('click', onDoubleClick, false);
+    animate();
+
+    isLoaded = true;
+    action.dancayoda.play();
+
+  });
+
 }
 
 function onWindowResize () {
@@ -153,22 +198,40 @@ function onWindowResize () {
   renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
+function onDoubleClick(){
+  cancelAnimationFrame( id );
+//  animate();
+}
+
 function animate () {
-  requestAnimationFrame(animate);
+  id = requestAnimationFrame(animate);
   controls.update();
   render();
 
 }
 
+// Pode mover um de cada vez, pressionando 1,2 ou 3 e tb pode mover todos ao mesmo tempo, mantendo os botões pressionados
 function render () {
     var delta = clock.getDelta();
-//  mixer_storminho.update(delta);
-//  mixer_yoda.update(delta);
-//    mixer_r2.update(delta);
+
+    if(keyboard.pressed("1")) {
+      renderer.render(scene, camera);
+        mixer_storminho.update(delta);
+    }
+
+    if(keyboard.pressed("2")) {
+      renderer.render(scene, camera);
+        mixer_yoda.update(delta);
+    }
+    if(keyboard.pressed("3")) {
+      renderer.render(scene, camera);
+        mixer_clone.update(delta);
+    }
+
     renderer.render(scene, camera);
 }
-/*
-function adicionaYoda(x, y){
+
+/* function adicionaYoda(x, y){
     // TODO: adicionar aqui o negócio do animation group lá pra gente conseguir
     // fazer eles fazerem todos a mesma dancinha
   loader.load('yoda.json', function (geometry, materials) {
@@ -180,14 +243,25 @@ function adicionaYoda(x, y){
       new THREE.MeshFaceMaterial(materials)
     );
 
-    yoda.position.x = x; 
+    yoda.position.x = x;
     yoda.position.y = y;
     yoda.updateMatrix();
 
     mixer_yoda = new THREE.AnimationMixer(yoda);
 
-    //scene.add(yoda);
+    scene.add(yoda);
+
+    action.dancayoda = mixer_yoda.clipAction(geometry.animations[ 0 ]);
+    action.dancayoda.setEffectiveWeight(1);
+    action.dancayoda.enabled = true;
+
+    window.addEventlistener('resize', onwindowResize, false);
+     window.addEventListener('click', onDoubleClick, false);
+    animate();
+
+    isLoaded = true;
+    action.dancayoda.play();
+
   });
 }
-
 */
