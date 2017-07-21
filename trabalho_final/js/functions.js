@@ -1,158 +1,151 @@
-var container;
-var scene, camera_1, camera_2, controls, renderer;
-var group = new THREE.Group();
-var ambient;
-var keyboard = new THREEx.KeyboardState();
-var theta = 0, radius = 70;
+var clock, container, camera, scene, renderer, controls, listener;
 
-function init(){
-	container = document.createElement('div');
-	document.body.appendChild(container);
+var ground, character;
+var light;
+var textureLoader = new THREE.TextureLoader();
+var loader = new THREE.JSONLoader();
+var isLoaded = false;
+var action = {}, mixer;
+var activeActionName = 'danca';
 
-    scene = new THREE.Scene();
+// arrumar os nomes qnd der certo
+var arrAnimations = [
+  'danca',
+  'marcha'
+];
+var actualAnimation = 0;
 
-    camera_1 = new THREE.PerspectiveCamera(10, window.innerWidth / window.innerHeight, 0.1, 1000);
-	group.add(camera_1);
-	camera_1.position.set(100, 0, 100);
-	camera_1.lookAt(scene.position);
+init();
 
-	camera_2 = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 1000);
-	group.add(camera_2);
-	camera_2.position.set(-10, 15, 10);
-	camera_2.lookAt(scene.position);
+function init () {
+  if(!Detector.webgl){
+    Detector.addGetWebGLMessage();
+  }
+  clock = new THREE.Clock();
 
-	camera_3 = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 0.1, 1000);
-	group.add(camera_3);
+  scene = new THREE.Scene();
 
+  renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(window.innerWidth, window.innerHeight);
 
-	ambient = new THREE.AmbientLight(0xffffff, 1.0);
-	group.add(ambient);
+  container = document.getElementById('container');
+  container.appendChild(renderer.domElement);
 
-	keyLight = new THREE.DirectionalLight(new THREE.Color('hsl(30, 100%, 75%)'), 1.0);
-	keyLight.position.set(-100, 0, 100);
-	fillLight = new THREE.DirectionalLight(new THREE.Color('hsl(240, 100%, 75%)'), 0.75);
-	fillLight.position.set(100, 0, 100);
-	backLight = new THREE.DirectionalLight(0xffffff, 1.0);
-	backLight.position.set(100, 0, -100).normalize();
+  camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+  camera.position.set(0, 2, 8);
+  listener = new THREE.AudioListener();
+  camera.add(listener);
 
-    var obj_pos;
-    var objLoader = new THREE.OBJLoader();
-	objLoader.setPath('imgs/Stormtrooper/');
-	objLoader.load('Stormtrooper.obj',function (object){
-		object.position.x = 0;
-		object.position.y = 0;
-		group.add(object);
-		});
-	console.log("objLoader ", typeof(objLoader));
-	
-	var mtlLoader = new THREE.MTLLoader();
-	mtlLoader.setTexturePath('imgs/Stormtrooper/');
-	mtlLoader.setPath('imgs/Stormtrooper/');
-	mtlLoader.load('Stormtrooper.mtl', function (materials) {
-		materials.preload();
-		objLoader.setMaterials(materials);
-	});
+  controls = new THREE.OrbitControls(camera, renderer.domElement);
+  controls.target = new THREE.Vector3(0, 0.6, 0);
+  // Lights
+  light = new THREE.AmbientLight(0xffffff, 1);
+  scene.add(light);
+  scene.background = new THREE.Color(  0xffffff );
 
+  textureLoader.load('texturas/ground.png', function (texture) {
+    var geometry = new THREE.PlaneBufferGeometry(2, 2);
+    geometry.rotateX(-Math.PI / 2);
+    var material = new THREE.MeshBasicMaterial({ map: texture, transparent: true });
+    ground = new THREE.Mesh(geometry, material);
+    scene.add(ground);
 
-	inserePlano(10, 10);
-	criaCurva();
+  });
 
-	// TODO: inserir qualquer outro objeto que não seja nativo do three.js pra testar o posicionamento
+  loader.load('Stormtrooper.json', function (geometry, materials) {
+    materials.forEach(function (material) {
+      material.skinning = true;
+    });
+    character = new THREE.SkinnedMesh(
+      geometry,
+      new THREE.MeshFaceMaterial(materials)
+    );
 
-	renderer = new THREE.WebGLRenderer();
-	renderer.setPixelRatio(window.devicePixelRatio);
-	renderer.setSize(window.innerWidth, window.innerHeight);
-	renderer.setClearColor(new THREE.Color("hsl(0, 0%, 10%)"));
+    // seta a posição inicial do personagem
+    character.position.x = -2;
+    character.position.y = -2;
+    character.updateMatrix();
 
-	container.appendChild(renderer.domElement);
+    mixer = new THREE.AnimationMixer(character);
 
-	control_1 = new THREE.OrbitControls(camera_1, renderer.domElement);
-	control_1.enableDamping = true;
-	control_1.dampingFactor = 0.25;
-	control_1.enableZoom = false;
+    action.marcha = mixer.clipAction(geometry.animations[ 1 ]);
+    action.danca = mixer.clipAction(geometry.animations[ 2 ]);
 
-	control_2 = new THREE.OrbitControls(camera_2, renderer.domElement);
-	control_2.enableDamping = true;
-	control_2.dampingFactor = 0.25;
-	control_2.enableZoom = false;
-	renderer.render(scene, camera_1);
+    action.marcha.setEffectiveWeight(1);
+    action.danca.setEffectiveWeight(1);
 
+/*      action.danca.setLoop(THREE.LoopOnce, 0);
+      action.danca.clampWhenFinished = true; */
+
+    action.danca.enabled = true;
+    action.marcha.enabled = true;
+
+    scene.add(character);
+
+    window.addEventListener('resize', onWindowResize, false);
+    window.addEventListener('click', onDoubleClick, false);
+    console.log('Double click to change animation');
+    animate();
+
+    isLoaded = true;
+
+    action.danca.play();
+  });
+}
+
+function fadeAction (name) {
+  var from = action[ activeActionName ].play();
+  var to = action[ name ].play();
+
+  from.enabled = true;
+  to.enabled = true;
+
+  if (to.loop === THREE.LoopOnce) {
+    to.reset();
+  }
+
+  from.crossFadeTo(to, 0.3);
+  activeActionName = name;
+
+}
+
+function onWindowResize () {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+
+  renderer.setSize(window.innerWidth, window.innerHeight);
+}
+
+var mylatesttap;
+function onDoubleClick () {
+  var now = new Date().getTime();
+  var timesince = now - mylatesttap;
+  if ((timesince < 600) && (timesince > 0)) {
+    if (actualAnimation == arrAnimations.length - 1) {
+      actualAnimation = 0;
+    } else {
+      actualAnimation++;
     }
+    fadeAction(arrAnimations[actualAnimation]);
 
-function animate(){
-	requestAnimationFrame(animate);
-	render();
-	// TWEEN.update();
+  } else {
+    // too much time to be a doubletap
+  }
+
+  mylatesttap = new Date().getTime();
+
 }
 
+function animate () {
+  requestAnimationFrame(animate);
+  controls.update();
+  render();
 
-function move(object){
-	object.translateX(3);
 }
 
-function insereCubo(x,y,z){
-	var geom_cubo = new THREE.BoxBufferGeometry(1, 1, 1);
-	var mat_cubo = new THREE.MeshNormalMaterial();
-	var cubo = new THREE.Mesh(geom_cubo, mat_cubo);
-	cubo.position.set(x, y, z);
-	group.add(cubo);
+function render () {
+  var delta = clock.getDelta();
+  mixer.update(delta);
+  renderer.render(scene, camera);
 }
-
-// TODO: esssa esfera nem é uma esfera. tentar consertar
-function insereEsfera(x,y,z){
-	var geom_esf = new THREE.SphereGeometry(1, 1, 1);
-	var mat_esf = new THREE.MeshNormalMaterial();
-	var esf = new THREE.Mesh(geom_esf, mat_esf);
-	esf.position.set(x, y, z);
-	group.add(esf);
-}
-
-function inserePlano(x, y){
-	var geom_plano = new THREE.PlaneBufferGeometry(x, y);
-	var mat_plano = new THREE.MeshNormalMaterial();
-	var plano = new THREE.Mesh(geom_plano, mat_plano);
-	plano.position.set(0, -3, 0);
-	plano.rotation.x = 1.5;
-	plano.material.side = THREE.DoubleSide;
-	group.add(plano);
-}
-
-// curva quadrática de bezier
-function criaCurva(){
-	var curva = new THREE.QuadraticBezierCurve(
-		new THREE.Vector2( -10, 0 ),
-		new THREE.Vector2( 20, 15 ),
-		new THREE.Vector2( 10, 0 )
-	);
-
-	var path = new THREE.Path( curva.getPoints( 50 ) );
-
-	var geometry = path.createPointsGeometry( 50 );
-	var material = new THREE.LineBasicMaterial( { color : 0xff0000, linewidth: 0 } );
-
-	var curveObject = new THREE.Line(geometry, material);
-
-	group.add(curveObject);
-}
-
-function render(){
-	control_1.update();
-	control_2.update();
-	if(keyboard.pressed("1")){
-		renderer.render(scene, camera_1);
-		control_1.update();
-	}
-	if(keyboard.pressed("2")) {
-		renderer.render(scene, camera_2);
-		control_2.update();
-	}
-
-	// TODO: achar um jeito de o movimento funcionar para a câmera 2 tbm
-    /*
-	theta += 1;
-  	camera_1.position.x = radius * Math.sin( THREE.Math.degToRad( theta ) );
-  	camera_1.position.y = radius * Math.sin( THREE.Math.degToRad( theta ) );
-	camera_1.position.z = radius * Math.cos( THREE.Math.degToRad( theta ) );
-	camera_1.lookAt( scene.position );*/
-}
-
