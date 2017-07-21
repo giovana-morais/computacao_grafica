@@ -38,7 +38,7 @@ function init () {
   camera.add(listener);
 
   camera_2 = new THREE.PerspectiveCamera(100, window.innerWidth / window.innerHeight, 0.1, 1000);
-	camera_2.position.set(0, 2, 10);
+	camera_2.position.set(0, 2, 6);
   listener2 = new THREE.AudioListener();
   camera.add(listener2);
 
@@ -213,8 +213,6 @@ function init () {
     materials.preload();
     objLoader.setMaterials(materials);
   });
-
-
 }
 
 function onWindowResize () {
@@ -235,7 +233,9 @@ function animate () {
 
 }
 
-// Pode mover um de cada vez, pressionando 1,2 ou 3 e tb pode mover todos ao mesmo tempo, mantendo os botões pressionados
+// Pode mover um de cada vez, pressionando 1,2 ou 3
+// Pode mover todos ao mesmo tempo, mantendo os botões pressionados
+
 function render () {
     var delta = clock.getDelta();
     var cam;
