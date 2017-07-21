@@ -53,7 +53,7 @@ function init () {
 
   });
 
-  loader.load('danca2.json', function (geometry, materials) {
+  loader.load('stormets.json', function (geometry, materials) {
     materials.forEach(function (material) {
       material.skinning = true;
     });
