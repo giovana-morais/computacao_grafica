@@ -1,12 +1,12 @@
 var clock, container, camera,camera_2, scene, renderer, controls, listener;
 var id, i=0;
-var ground, storminho, yoda,cloneyoda,cloneyoda2,cloneyoda3;
+var ground, storminho, yoda, cloneyoda, cloneyoda2, cloneyoda3;
 var light;
 var textureLoader = new THREE.TextureLoader();
 var loader = new THREE.JSONLoader();
 var keyboard = new THREEx.KeyboardState();
 var isLoaded = false;
-var action = {}, mixer_storminho,mixer_yoda,mixer_clone,mixer_clone2,mixer_clone3;
+var action = {}, mixer_storminho, mixer_yoda, mixer_clone, mixer_clone2, mixer_clone3;
 
 // arrumar os nomes qnd der certo
 var arrAnimations = [
@@ -48,14 +48,23 @@ function init () {
   light = new THREE.AmbientLight(0xffffff, 1);
   scene.add(light);
 
+    var spotLight = new THREE.SpotLight(0xffffff);
+    spotLight.position.set(-0.25, 100, -0.2);
+    spotLight.castShadow = true;
+    spotLight.shadow.mapSize.width = 1024;
+    spotLight.shadow.mapSize.height = 1024;
+
+    spotLight.shadow.camera.near = 500;
+    spotLight.shadow.camera.far = 4000;
+    spotLight.shadow.camera.fov = 30;
+
+    scene.add(spotLight);
+
     /* plano de fundo
      * OBS: com certeza deve ter um jeito mais simples de fazer isso usando só
      * um plano, mas não sou capaz de pensar no momento, então vai ser usando
      * esse baita cubo mesmo.
      */
-
-    // obs2: vamos ter que mudar a imagem pq ela precisa ser quadrada. mas isso
-    // eu faço quando eu acordar
     var urls = [
         "texturas/background1.png",
         "texturas/background1.png",
@@ -305,7 +314,6 @@ function render () {
     }
 
     // Pressionar 1 pra animação principal aka storminho
-
     if(keyboard.pressed("1")) {
       renderer.render(scene, cam);
         mixer_storminho.update(delta);
@@ -330,7 +338,6 @@ function render () {
       renderer.render(scene, cam);
         mixer_clone.update(delta);
     }
-
 
     renderer.render(scene, cam);
 }
