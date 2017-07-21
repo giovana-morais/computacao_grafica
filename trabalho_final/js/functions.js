@@ -51,7 +51,7 @@ function init () {
     scene.add(ground);
 
   }); */
-  loader.load('Stormtrooper.json', function (geometry, materials) {
+  loader.load('r2.json', function (geometry, materials) {
 
     materials.forEach(function (material) {
       material.skinning = true;
@@ -68,7 +68,7 @@ function init () {
 
     mixer = new THREE.AnimationMixer(character);
 
-    action.danca = mixer.clipAction(geometry.animations[ 2 ]);
+    action.danca = mixer.clipAction(geometry.animations[ 0 ]);
 
     action.danca.setEffectiveWeight(1);
 
@@ -85,7 +85,7 @@ function init () {
   });
 
 
-  loader.load('yoda.json', function (geometry, materials) {
+/*  loader.load('yoda.json', function (geometry, materials) {
     materials.forEach(function (material) {
       material.skinning = true;
     });
@@ -116,7 +116,7 @@ function init () {
     isLoaded = true;
 
     action.dancayoda.play();
-  });
+  }); */
 
 
 }
