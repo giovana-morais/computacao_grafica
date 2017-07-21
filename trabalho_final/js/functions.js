@@ -1,17 +1,16 @@
 var clock, container, camera, scene, renderer, controls, listener;
-
+var i;
 var ground, character;
 var light;
 var textureLoader = new THREE.TextureLoader();
 var loader = new THREE.JSONLoader();
 var isLoaded = false;
 var action = {}, mixer;
-var activeActionName = 'danca';
 
 // arrumar os nomes qnd der certo
 var arrAnimations = [
   'danca',
-  'marcha'
+  'dancayoda'
 ];
 var actualAnimation = 0;
 
@@ -44,15 +43,14 @@ function init () {
   scene.add(light);
   scene.background = new THREE.Color(  0xffffff );
 
-  textureLoader.load('texturas/ground.png', function (texture) {
+/*  textureLoader.load('texturas/ground.png', function (texture) {
     var geometry = new THREE.PlaneBufferGeometry(2, 2);
     geometry.rotateX(-Math.PI / 2);
     var material = new THREE.MeshBasicMaterial({ map: texture, transparent: true });
     ground = new THREE.Mesh(geometry, material);
     scene.add(ground);
 
-  });
-
+  }); */
   loader.load('Stormtrooper.json', function (geometry, materials) {
     materials.forEach(function (material) {
       material.skinning = true;
@@ -69,44 +67,56 @@ function init () {
 
     mixer = new THREE.AnimationMixer(character);
 
-    action.marcha = mixer.clipAction(geometry.animations[ 1 ]);
     action.danca = mixer.clipAction(geometry.animations[ 2 ]);
 
-    action.marcha.setEffectiveWeight(1);
     action.danca.setEffectiveWeight(1);
 
-/*      action.danca.setLoop(THREE.LoopOnce, 0);
-      action.danca.clampWhenFinished = true; */
-
     action.danca.enabled = true;
-    action.marcha.enabled = true;
 
     scene.add(character);
 
     window.addEventListener('resize', onWindowResize, false);
-    window.addEventListener('click', onDoubleClick, false);
-    console.log('Double click to change animation');
     animate();
 
     isLoaded = true;
 
     action.danca.play();
   });
-}
 
-function fadeAction (name) {
-  var from = action[ activeActionName ].play();
-  var to = action[ name ].play();
 
-  from.enabled = true;
-  to.enabled = true;
+  /*loader.load('yoda.json', function (geometry, materials) {
+    materials.forEach(function (material) {
+      material.skinning = true;
+    });
+    character = new THREE.SkinnedMesh(
+      geometry,
+      new THREE.MeshFaceMaterial(materials)
+    );
 
-  if (to.loop === THREE.LoopOnce) {
-    to.reset();
-  }
+    // seta a posição inicial do personagem
+    character.position.x = -2;
+    character.position.y = -2;
+    character.updateMatrix();
 
-  from.crossFadeTo(to, 0.3);
-  activeActionName = name;
+    mixer = new THREE.AnimationMixer(character);
+
+
+    action.dancayoda = mixer.clipAction(geometry.animations[ 2 ]);
+
+    action.dancayoda.setEffectiveWeight(1);
+
+    action.dancayoda.enabled = true;
+
+    scene.add(character);
+
+    window.addEventListener('resize', onWindowResize, false);
+    animate();
+
+    isLoaded = true;
+
+    action.danca.play();
+  });
+*/
 
 }
 
@@ -115,26 +125,6 @@ function onWindowResize () {
   camera.updateProjectionMatrix();
 
   renderer.setSize(window.innerWidth, window.innerHeight);
-}
-
-var mylatesttap;
-function onDoubleClick () {
-  var now = new Date().getTime();
-  var timesince = now - mylatesttap;
-  if ((timesince < 600) && (timesince > 0)) {
-    if (actualAnimation == arrAnimations.length - 1) {
-      actualAnimation = 0;
-    } else {
-      actualAnimation++;
-    }
-    fadeAction(arrAnimations[actualAnimation]);
-
-  } else {
-    // too much time to be a doubletap
-  }
-
-  mylatesttap = new Date().getTime();
-
 }
 
 function animate () {
