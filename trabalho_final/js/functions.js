@@ -53,7 +53,7 @@ function init () {
 
   });
 
-  loader.load('Stormtrooper.json', function (geometry, materials) {
+  loader.load('yoda.json', function (geometry, materials) {
     materials.forEach(function (material) {
       material.skinning = true;
     });
