@@ -6,12 +6,12 @@ var textureLoader = new THREE.TextureLoader();
 var loader = new THREE.JSONLoader();
 var isLoaded = false;
 var action = {}, mixer;
-var activeActionName = 'marcha';
+var activeActionName = 'danca';
 
 // arrumar os nomes qnd der certo
 var arrAnimations = [
-  'marcha',
-  'merge'
+  'danca',
+  'marcha'
 ];
 var actualAnimation = 0;
 
@@ -64,16 +64,16 @@ function init () {
 
     mixer = new THREE.AnimationMixer(character);
 
-    action.marcha = mixer.clipAction(geometry.animations[ 0 ]);
-    action.merge = mixer.clipAction(geometry.animations[ 1 ]);
+    action.marcha = mixer.clipAction(geometry.animations[ 1 ]);
+    action.danca = mixer.clipAction(geometry.animations[ 2 ]);
 
     action.marcha.setEffectiveWeight(1);
-    action.merge.setEffectiveWeight(1);
+    action.danca.setEffectiveWeight(1);
 
 /*      action.danca.setLoop(THREE.LoopOnce, 0);
       action.danca.clampWhenFinished = true; */
 
-    action.merge.enabled = true;
+    action.danca.enabled = true;
     action.marcha.enabled = true;
 
     scene.add(character);
@@ -85,7 +85,7 @@ function init () {
 
     isLoaded = true;
 
-    action.marcha.play();
+    action.danca.play();
   });
 }
 
