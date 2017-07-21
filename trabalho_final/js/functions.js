@@ -41,8 +41,27 @@ function init () {
   // Lights
   light = new THREE.AmbientLight(0xffffff, 1);
   scene.add(light);
-  scene.background = new THREE.Color(  0xffffff );
 
+    /* plano de fundo 
+     * OBS: com certeza deve ter um jeito mais simples de fazer isso usando só
+     * um plano, mas não sou capaz de pensar no momento, então vai ser usando
+     * esse baita cubo mesmo.
+     */
+    
+    // obs2: vamos ter que mudar a imagem pq ela precisa ser quadrada. mas isso
+    // eu faço quando eu acordar
+    var urls = [
+        "texturas/background1.png",
+        "texturas/background1.png",
+        "texturas/background1.png",
+        "texturas/background1.png",
+        "texturas/background1.png",
+        "texturas/background1.png",
+    ];
+
+    scene.background = new THREE.CubeTextureLoader().load(urls);
+
+    /* chão */
     ground_textura = THREE.ImageUtils.loadTexture('texturas/ground.png');
     ground_textura.wrapS = THREE.RepeatWrapping;
     ground_textura.wrapT = THREE.RepeatWrapping;
@@ -58,7 +77,6 @@ function init () {
     ground.rotation.x = -Math.PI/2;
     ground.doubleSided = true;
     scene.add(ground);
-
 
   loader.load('Stormtrooper.json', function (geometry, materials) {
 
@@ -114,6 +132,8 @@ function init () {
     isLoaded = true;
     action.dancayoda.play();
   });
+
+
 }
 
 function onWindowResize () {
